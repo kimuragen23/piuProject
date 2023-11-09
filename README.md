@@ -1,6 +1,6 @@
 ![header](https://capsule-render.vercel.app/api?type=soft&color=random&height=300&section=header&text=PIU%20PROJECT&fontSize=90&animation=fadeIn&fontColor=#000)
 
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Single+Day&weight=800&size=24&pause=1000&color=F7F7F7&random=false&width=435&lines=PIU+PROJECT+(%EC%9C%A0%EA%B8%B0%EA%B2%AC+%EB%B3%B4%ED%98%B8+%EC%BA%A0%ED%8C%A8%EC%9D%B8+%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8))](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&random=false&width=435&lines=PIU+PROJECT(+%EC%9C%A0%EA%B8%B0%EA%B2%AC+%EB%B3%B4%ED%98%B8+%EC%BA%A0%ED%8C%A8%EC%9D%B8+))](https://git.io/typing-svg)
 
 -------------
 <details>
