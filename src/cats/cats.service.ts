@@ -1,7 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CatEntity } from './entities/cat.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { EntityNotFoundError, Repository } from 'typeorm';
+import { UpdateCatDto } from './dto/update-cat.dto';
+import { CreateCatDto } from './dto/create-cat.dto';
+import { error } from 'console';
 
 @Injectable()
 export class CatsService {
@@ -9,31 +12,73 @@ export class CatsService {
   private catsRepository: Repository<CatEntity>) { }
 
 
-  async create(cat: CatEntity): Promise<CatEntity> {
-    const newCat = this.catsRepository.create(cat);
-    return await this.catsRepository.save(newCat);
+  async create(cat: CreateCatDto): Promise<CreateCatDto> {
+    try {
+      return await this.catsRepository.save(cat);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  async update(id: number, cat: CatEntity): Promise<number> {
-    await this.catsRepository.update(id, cat);
-    return id
+  async findAll(): Promise<CatEntity[]> {
+    try {
+      return this.catsRepository.find();
+    } catch (error) {
+      throw error
+    }
+
   }
 
-  async getAll(): Promise<CatEntity[]> {
-    return this.catsRepository.find();
+  async findOne(id: number): Promise<CatEntity> {
+    try {
+      return await this.catsRepository.findOne({
+        where: {
+          id
+        }
+      });
+    } catch (error) {
+      throw error
+    }
   }
 
-  async getOne(id: number): Promise<CatEntity> {
-    return await this.catsRepository.findOne({
-      where: {
-        id
+
+  async update(id: number, updateCat: UpdateCatDto): Promise<CatEntity> {
+    try {
+      const cat = await this.catsRepository.findOne({
+        where: {
+          id
+        }
+      });
+      if (!cat) {
+        throw new EntityNotFoundError(CatEntity, id);
       }
-    });
+      const result = await this.catsRepository.save({
+        ...cat,
+        ...updateCat,
+      });
+      return result;
+    } catch (error) {
+      throw error
+    }
   }
 
   async remove(id: number): Promise<number> {
-    await this.catsRepository.delete(id);
-    return id
+    try {
+      const cat = await this.catsRepository.findOne({
+        where: {
+          id
+        }
+      });
+      if (!cat) {
+        throw new EntityNotFoundError(CatEntity, id);
+      }
+      await this.catsRepository.softDelete({
+        id: cat.id,
+      });
+      return cat.id;
+    } catch (error) {
+      throw error;
+    }
   }
 
 
