@@ -14,6 +14,7 @@ import { CatEntity } from './entities/cat.entity';
 import { UpdateCatDto } from './dto/update-cat.dto';
 import { CreateCatDto } from './dto/create-cat.dto';
 
+//http://localhost/cats
 @Controller('cats')
 export class CatsController {
   constructor(private readonly catsService: CatsService) { }

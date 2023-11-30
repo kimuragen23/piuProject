@@ -22,7 +22,7 @@ export class CatsService {
 
   async findAll(): Promise<CatEntity[]> {
     try {
-      return this.catsRepository.find();
+      return await this.catsRepository.find();
     } catch (error) {
       throw error
     }
@@ -36,6 +36,7 @@ export class CatsService {
           id
         }
       });
+      //select * from cat where 
     } catch (error) {
       throw error
     }
