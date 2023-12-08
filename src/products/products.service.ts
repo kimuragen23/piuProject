@@ -55,15 +55,6 @@ export class ProductsService {
     }
   }
 
-  /*
-    {
-          "brandId":1,
-          "brandName":"브랜드1",
-          "productCodeId":1,
-          "productName":"곰돌이옷",
-          "isSoldout": <bool>
-  },
-   */
   async findAll(): Promise<Product[]> {
     let products = await this.productRepository.createQueryBuilder("p")
       .select('b.brand_id', 'brand_id')

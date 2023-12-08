@@ -4,6 +4,8 @@ import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
 import { promises } from 'dns';
 import Order from './entities/order.entity';
+import { ReadOrderDto } from './dto/read-order.dto';
+import { OrderDetailDto } from './dto/orderdetail.dto';
 
 @Controller('orders')
 export class OrdersController {
@@ -14,14 +16,10 @@ export class OrdersController {
     return this.ordersService.create(createOrderDto);
   }
 
-  @Get()
-  findAll() {
-    return this.ordersService.findAll();
-  }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ordersService.findOne(+id);
+  @Post('detail')
+  findOne(@Body() readOrderDto: ReadOrderDto): Promise<OrderDetailDto> {
+    return this.ordersService.findOne(readOrderDto);
   }
 
   @Patch(':id')

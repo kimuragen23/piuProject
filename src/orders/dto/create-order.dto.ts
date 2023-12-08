@@ -23,7 +23,7 @@ export class CreateOrderDto {
 
     @IsArray()
     @ValidateNested() @Type(() => ProductInfoDto)
-    product_info: ProductInfoDto[]
+    product_info: ProductInfoDto
 
     @IsBoolean()
     agree: boolean;
