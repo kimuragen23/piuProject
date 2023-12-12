@@ -21,7 +21,7 @@ export class CreateOrderDto {
     @ValidateNested() @Type(() => AddressDto)
     address: AddressDto
 
-    @IsArray()
+    @IsObject()
     @ValidateNested() @Type(() => ProductInfoDto)
     product_info: ProductInfoDto
 
@@ -30,9 +30,6 @@ export class CreateOrderDto {
 
     @IsString()
     depositor_name: string;
-
-    @IsDate()
-    create_date: Date;
 
 }
 

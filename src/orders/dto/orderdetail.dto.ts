@@ -1,7 +1,6 @@
 import { Type } from "class-transformer";
 import { IsArray, IsBoolean, IsDate, IsObject, IsString, ValidateNested } from "class-validator";
 import { AddressDto } from "./address.dto";
-import { ProductInfoDto } from "./productinfo.dto";
 
 export class OrderDetailDto {
 
