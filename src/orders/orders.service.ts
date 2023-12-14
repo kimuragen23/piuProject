@@ -131,6 +131,8 @@ export class OrdersService {
 
   async findOne(readOrderDto: ReadOrderDto): Promise<OrderDetailDto> {
     try {
+      console.log(process.env.PASS);
+      console.log(process.env.EMAIL);
       let order_code: String = readOrderDto.order_code;
       let cust_name: String = readOrderDto.cust_name;
       let cust_pwd: String = readOrderDto.cust_pwd;

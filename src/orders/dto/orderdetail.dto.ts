@@ -14,7 +14,7 @@ export class OrderDetailDto {
     phone_number: string;
 
     @IsString()
-    cust_post: string;
+    zipCode: string;
 
     @IsString()
     depositor_name: string;

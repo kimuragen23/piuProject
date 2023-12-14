@@ -7,10 +7,7 @@ import * as hbs from 'hbs';
 import * as fs from 'fs';
 
 async function bootstrap() {
-  const httpsOptions = {
-    key: fs.readFileSync(process.env.SSL_KEY_PATH),
-    cert: fs.readFileSync(process.env.SSL_CERT_PATH),
-  };
+
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 

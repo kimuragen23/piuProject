@@ -10,9 +10,13 @@ import { Product } from 'src/products/entities/product.entity';
 import { join } from 'path';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forFeature([Order, Accountinfo, Orderstatus, Orderdetail, Product]),
     MailerModule.forRoot({
       transport: {
@@ -21,8 +25,8 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
         port: 587,
         secure: false,
         auth: {
-          user: 'juhee10131013@gmail.com',
-          pass: 'qpzm mrgc qaba vbja',
+          user: process.env.EMAIL,
+          pass: process.env.PASS,
         }
       },
       template: {
