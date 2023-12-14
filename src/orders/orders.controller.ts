@@ -22,11 +22,6 @@ export class OrdersController {
     return this.ordersService.findOne(readOrderDto);
   }
 
-  @Get()
-  update() {
-    return this.ordersService.checkDate();
-  }
-
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.ordersService.remove(+id);

@@ -186,30 +186,6 @@ export class OrdersService {
     }
   }
 
-  async checkDate() {
-    let result = await this.orderRepository.createQueryBuilder("o")
-      .select('o.order_id', 'order_id')
-      .addSelect('o.create_date', 'create_date')
-      .where('DATE_ADD(o.create_date, INTERVAL 3 DAY) <= now()', {})
-      .andWhere('o.orderstatus_id = 1', {})
-      .andWhere('o.delete_date is null', {})
-      .getRawMany();
-    let delete_id = []
-    result.map((v, i) => {
-      delete_id.push(v.order_id);
-    });
-    console.log(delete_id);
-    if (delete_id.length > 0) {
-      await this.orderRepository.createQueryBuilder("o")
-        .update()
-        .set({ delete_date: new Date() })
-        .where("order_id in ( :delete_id )", { delete_id })
-        .execute();
-    }
-
-
-    return `This action updates a order`;
-  }
 
   remove(id: number) {
     return `This action removes a #${id} order`;
