@@ -22,9 +22,9 @@ export class OrdersController {
     return this.ordersService.findOne(readOrderDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.ordersService.update(+id, updateOrderDto);
+  @Get()
+  update() {
+    return this.ordersService.checkDate();
   }
 
   @Delete(':id')

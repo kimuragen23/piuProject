@@ -16,6 +16,7 @@ import { Orderstatus } from './orderstatus/entities/orderstatus.entity';
 import { OrderdetailModule } from './orderdetail/orderdetail.module';
 import Order from './orders/entities/order.entity';
 import { Orderdetail } from './orderdetail/entities/orderdetail.entity';
+import { BatchModule } from './batch/batch.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { Orderdetail } from './orderdetail/entities/orderdetail.entity';
     AccountinfoModule,
     OrderstatusModule,
     OrderdetailModule,
+    BatchModule,
   ],
   controllers: [AppController],
   providers: [],
