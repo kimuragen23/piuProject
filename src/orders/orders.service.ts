@@ -13,6 +13,7 @@ import { ReadOrderDto } from './dto/read-order.dto';
 import { OrderDetailDto } from './dto/orderdetail.dto';
 import { AddressDto } from './dto/address.dto';
 import { ProductInfoDto } from './dto/productinfo.dto';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class OrdersService {
@@ -27,7 +28,8 @@ export class OrdersService {
     @InjectRepository(Orderdetail)
     private readonly orderdetailRepository: Repository<Orderdetail>,
     @InjectRepository(Product)
-    private productRepository: Repository<Product>) { }
+    private productRepository: Repository<Product>,
+    private readonly mailerService: MailerService) { }
 
 
   async create(createOrderDto: CreateOrderDto): Promise<Order> {
@@ -85,7 +87,40 @@ export class OrdersService {
           throw error
         }
         console.log(orderdetail);
-        await this.orderdetailRepository.save(orderdetail)
+        this.orderdetailRepository.save(orderdetail).then(async () => {
+          const date = new Date();
+          const year = date.getFullYear();
+          const month = date.getMonth() + 1;
+          const day = date.getDate();
+          const hour = date.getHours();
+          const minute = date.getMinutes();
+          const amPm = hour >= 12 ? '오후' : '오전';
+          const order_date = `${year}년 ${month}월 ${day}일 ${hour}시 ${minute}분 ${amPm}`;
+
+          try {
+            await this.mailerService.sendMail({
+              from: 'juhee10131013@gmail.com',
+              to: order.email, //string or Array
+              subject: "주문이 성공적으로 완료되었습니다.",
+              text: "",
+              template: 'orders_mail.hbs',
+              context: {  // Data to be sent to template files.
+                order_code: order.order_code,
+                order_date: order_date,
+                cust_name: order.cust_name,
+                phone: order.phone_number,
+                email: order.email,
+                address: `(${order.cust_post})${order.cust_address} ${order.cust_detailaddress}`,
+                depositorName: order.depositor_name,
+                price: orderdetail.product.price * product_info.orderproduct_count,
+                accountinfo: `${order.accountinfo.account_bank}(${order.accountinfo.account_number}) / ${order.accountinfo.account_name}`
+              }
+            });
+            console.log('메일이 전송되었습니다')
+          } catch (error) {
+            console.error('메일 전송 중 오류가 발생했습니다:', error);
+          }
+        });
       });
       return order;
     } catch (error) {

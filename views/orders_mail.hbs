@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <title>주문 완료</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .container {
+      width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-top: 0;
+    }
+
+    p {
+      margin-bottom: 16px;
+    }
+
+    .order-info {
+      margin-top: 24px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: 1px solid #ccc;
+      padding: 8px;
+    }
+
+    .order-detail {
+      margin-top: 24px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>주문이 성공적으로 완료되었습니다.</h1>
+
+    <p>주문하신 상품의 결제가 성공적으로 완료되었습니다.</p>
+    <p>주문 상태는 아래 카카오톡 플러스 친구를 통해 문의하실 수 있습니다.</p>
+    <a href="https://www.petinuniverse.com" target="_blank">주문조회 하로가기</a>
+    <hr>
+    <div class="order-detail">
+      <h2>주문 상품</h2>
+
+      <table>
+        <tr>
+          <th width="33%">상품명</th>
+          <th width="33%">수량</th>
+          <th width="33%">상태</th>
+        </tr>
+        <tr>
+          <td>PIU 패키지</td>
+          <td>1개</td>
+          <td>주문 접수</td>
+        </tr>
+      </table>
+    </div>
+    <br>
+    <hr>
+    <div class="order-info">
+      <h2>주문 정보</h2>
+
+      <table>
+        <tr>
+          <th width="25%">주문번호</th>
+          <td>{{order_code}}</td>
+        </tr>
+        <tr>
+          <th width="25%">주문일자</th>
+          <td>{{order_date}}</td>
+        </tr>
+        <tr>
+          <th width="25%">주문고객</th>
+          <td>{{cust_name}}</td>
+        </tr>
+        <tr>
+          <th width="25%">휴대전화</th>
+          <td>{{phone}}</td>
+        </tr>
+        <tr>
+          <th width="25%">이메일</th>
+          <td>{{email}}</td>
+        </tr>
+        <tr>
+          <th width="25%">주소</th>
+          <td>{{address}}</td>
+        </tr>
+      </table>
+    </div>
+    <br>
+    <hr>
+    <div class="order-info">
+      <h2>결제 정보</h2>
+      <table>
+        <tr>
+          <th width="25%">결제 안내</th>
+          <td>무통장입금</td>
+        </tr>
+        <tr>
+          <th width="25%">입금자명</th>
+          <td>{{depositorName}}</td>
+        </tr>
+        <tr>
+          <th width="25%">입금은행</th>
+          <td>{{accountinfo}}</td>
+        </tr>
+        <tr>
+          <th width="25%">배송비</th>
+          <td>무료 배송</td>
+        </tr>
+        <tr>
+          <th width="25%">입금 금액</th>
+          <td>{{price}}원</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <br>
+  <br>
+</body>
+
+</html>
