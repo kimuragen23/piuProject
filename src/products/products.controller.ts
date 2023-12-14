@@ -18,9 +18,9 @@ export class ProductsController {
     return this.productsService.findAll();
   }
 
-  @Get(':productcode_id')
-  findAllByProductDetail(@Param('productcode_id') productcode_id: string): Promise<Product[]> {
-    return this.productsService.findAllByProductDetail(+productcode_id);
+  @Get(':product_id')
+  findAllByProductDetail(@Param('product_id') product_id: string): Promise<Product> {
+    return this.productsService.findAllByProductDetail(+product_id);
   }
 
   @Patch(':id')

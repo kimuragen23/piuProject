@@ -68,8 +68,8 @@ export class ProductsService {
     return products;
   }
 
-  async findAllByProductDetail(productcode_id: number): Promise<Product[]> {
-    let products = await this.productRepository.createQueryBuilder("p")
+  async findAllByProductDetail(product_id: number): Promise<Product> {
+    let product = await this.productRepository.createQueryBuilder("p")
       .select('p.product_id', 'product_id')
       .addSelect('p.brand_id', 'brand_id')
       .addSelect('b.brand_name', 'brand_name')
@@ -79,9 +79,9 @@ export class ProductsService {
       .addSelect('p.price', 'price')
       .addSelect('p.inventory', 'inventory')
       .leftJoin('tb_brands', 'b', 'b.brand_id = p.brand_id')
-      .where('p.productcode_id = :productcode_id', { productcode_id })
-      .getRawMany();
-    return products;
+      .where('p.product_id = :product_id', { product_id })
+      .getRawOne();
+    return product;
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {
