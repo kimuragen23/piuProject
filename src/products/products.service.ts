@@ -6,6 +6,8 @@ import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
 import { Productcode } from 'src/productcode/entities/productcode.entity';
 import { Brand } from 'src/brands/entities/brand.entity';
+import Order from 'src/orders/entities/order.entity';
+import { ReadProductDto } from './dto/read-product.dto';
 
 @Injectable()
 export class ProductsService {
@@ -15,7 +17,9 @@ export class ProductsService {
     @InjectRepository(Brand)
     private readonly brandsRepository: Repository<Brand>,
     @InjectRepository(Productcode)
-    private readonly productcodeRepository: Repository<Productcode>) { }
+    private readonly productcodeRepository: Repository<Productcode>,
+    @InjectRepository(Order)
+    private readonly orderRepository: Repository<Order>) { }
 
   async create(createProductDto: CreateProductDto): Promise<Product> {
     try {
@@ -68,7 +72,7 @@ export class ProductsService {
     return products;
   }
 
-  async findAllByProductDetail(product_id: number): Promise<Product> {
+  async findAllByProductDetail(product_id: number): Promise<ReadProductDto> {
     let product = await this.productRepository.createQueryBuilder("p")
       .select('p.product_id', 'product_id')
       .addSelect('p.brand_id', 'brand_id')
@@ -81,7 +85,16 @@ export class ProductsService {
       .leftJoin('tb_brands', 'b', 'b.brand_id = p.brand_id')
       .where('p.product_id = :product_id', { product_id })
       .getRawOne();
-    return product;
+
+    let soldout = await this.getSoldout(product_id);
+    let readProduct = new ReadProductDto();
+    readProduct.product_id = product.product_id;
+    readProduct.product_name = product.product_name;
+    readProduct.price = product.price;
+    readProduct.inventory = soldout["inventory"];
+    readProduct.isSoldout = soldout["isSoldout"];
+
+    return readProduct;
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {
@@ -91,4 +104,41 @@ export class ProductsService {
   remove(id: number) {
     return `This action removes a #${id} product`;
   }
+
+  async getSoldout(product_id: number): Promise<Object> {
+    let soldout = await this.orderRepository.createQueryBuilder("o")
+      .select('p.inventory - sum(od.orderproduct_count)', 'inventory')
+      .leftJoin('tb_orderdetail', 'od', 'o.order_id = od.order_id')
+      .leftJoin('tb_products', 'p', 'p.product_id = od.product_id')
+      .where('o.orderstatus_id = 1', {})
+      .andWhere('o.delete_date is null', {})
+      .andWhere('od.product_id = :product_id', { product_id })
+      .orWhere('o.orderstatus_id =  2', {})
+      .andWhere('od.product_id = :product_id', { product_id })
+      .getRawOne();
+
+    if (+soldout.inventory <= 0) {
+      return {
+        "inventory": 0,
+        "isSoldout": true
+      };
+    } else {
+      return {
+        "inventory": +soldout.inventory,
+        "isSoldout": false
+      };
+    }
+
+  }
+
+  /**
+select 
+  p.inventory - sum(od.orderproduct_count) as numberSales
+from tb_order o
+left join tb_orderdetail od
+on o.order_id = od.order_id
+left join tb_products p
+on p.product_id = od.product_id
+where o.orderstatus_id =1 and o.delete_date is null or o.orderstatus_id = 2;
+   */
 }
