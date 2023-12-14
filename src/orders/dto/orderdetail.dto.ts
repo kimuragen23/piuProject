@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsArray, IsBoolean, IsDate, IsObject, IsString, ValidateNested } from "class-validator";
+import { IsArray, IsBoolean, IsDate, IsNumber, IsObject, IsString, ValidateNested } from "class-validator";
 import { AddressDto } from "./address.dto";
 
 export class OrderDetailDto {
@@ -31,13 +31,13 @@ export class OrderDetailDto {
     @IsString()
     account_bank: string;
 
-    @IsString()
+    @IsNumber()
     product_count: number;
 
     @IsString()
     product_name: string;
 
-    @IsString()
+    @IsNumber()
     product_price: number;
 
     @IsObject()
