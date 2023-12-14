@@ -2,11 +2,11 @@ import { IsString } from "class-validator";
 
 export class AddressDto {
     @IsString()
-    cust_post: string;
+    zipCode: string;
 
     @IsString()
-    cust_address: string;
+    fullAddress: string;
 
     @IsString()
-    cust_detailaddress: string;
+    detailAddress: string;
 }

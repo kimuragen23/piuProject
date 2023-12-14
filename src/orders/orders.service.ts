@@ -42,9 +42,9 @@ export class OrdersService {
       order.phone_number = createOrderDto.phone_number;
       order.email = createOrderDto.email;
       order.cust_pwd = createOrderDto.cust_pwd;
-      order.cust_post = createOrderDto.address.cust_post;
-      order.cust_address = createOrderDto.address.cust_address;
-      order.cust_detailaddress = createOrderDto.address.cust_detailaddress;
+      order.zipCode = createOrderDto.address.zipCode;
+      order.fullAddress = createOrderDto.address.fullAddress;
+      order.detailAddress = createOrderDto.address.detailAddress;
       order.agree = createOrderDto.agree;
       order.depositor_name = createOrderDto.depositor_name;
       try {
@@ -110,7 +110,7 @@ export class OrdersService {
                 cust_name: order.cust_name,
                 phone: order.phone_number,
                 email: order.email,
-                address: `(${order.cust_post})${order.cust_address} ${order.cust_detailaddress}`,
+                address: `(${order.zipCode})${order.fullAddress} ${order.detailAddress}`,
                 depositorName: order.depositor_name,
                 price: orderdetail.product.price * product_info.orderproduct_count,
                 accountinfo: `${order.accountinfo.account_bank}(${order.accountinfo.account_number}) / ${order.accountinfo.account_name}`
@@ -140,9 +140,9 @@ export class OrdersService {
         .select('o.cust_name', 'cust_name')
         .addSelect('o.email', 'email')
         .addSelect('o.phone_number', 'phone_number')
-        .addSelect('o.cust_post', 'cust_post')
-        .addSelect('o.cust_address', 'cust_address')
-        .addSelect('o.cust_detailaddress', 'cust_detailaddress')
+        .addSelect('o.zipCode', 'zipCode')
+        .addSelect('o.fullAddress', 'fullAddress')
+        .addSelect('o.detailAddress', 'detailAddress')
         .addSelect('o.depositor_name', 'depositor_name')
         .addSelect('os.name', 'orderstatus')
         .addSelect('od.orderproduct_count', 'product_count')
@@ -173,9 +173,9 @@ export class OrdersService {
       orderdetail.product_name = result.product_name;
       orderdetail.product_price = result.product_price;
 
-      address.cust_post = result.cust_post;
-      address.cust_address = result.cust_address;
-      address.cust_detailaddress = result.cust_detailaddress;
+      address.zipCode = result.zipCode;
+      address.fullAddress = result.fullAddress;
+      address.detailAddress = result.detailAddress;
       orderdetail.address = address;
 
       return orderdetail;

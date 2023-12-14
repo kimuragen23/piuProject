@@ -25,13 +25,13 @@ export default class Order extends BaseEntity {
     cust_pwd: string;
 
     @Column({ type: 'varchar', length: 10, comment: '우편번호' })
-    cust_post: string;
+    zipCode: string;
 
     @Column({ type: 'varchar', length: 60, comment: '주소' })
-    cust_address: string;
+    fullAddress: string;
 
     @Column({ type: 'varchar', length: 20, comment: '상세주소' })
-    cust_detailaddress: string;
+    detailAddress: string;
 
     @Column({ type: 'tinyint', comment: '수집동의' })
     agree: boolean;
