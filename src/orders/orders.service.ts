@@ -185,7 +185,26 @@ export class OrdersService {
       throw error;
     }
   }
+  async dpstPrcsn(readOrderDto: ReadOrderDto): Promise<string> {
+    try {
+      if (readOrderDto.cust_pwd == process.env.ADMINPASS) {
+        await this.orderRepository.createQueryBuilder("o")
+          .update()
+          .set({
+            orderstatus: { orderstatus_id: 2 },
+            update_date: new Date(),
+            delete_date: null,
+          })
+          .where("order_code = :order_code", { order_code: readOrderDto.order_code })
+          .andWhere("cust_name = :cust_name", { cust_name: readOrderDto.cust_name })
+          .execute();
+      }
 
+      return '굿~';
+    } catch (error) {
+      throw error
+    }
+  }
 
   remove(id: number) {
     return `This action removes a #${id} order`;

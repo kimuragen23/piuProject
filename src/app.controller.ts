@@ -3,7 +3,7 @@ import { Controller, Get, Render } from '@nestjs/common';
 @Controller('')
 export class AppController {
   @Get()
-  @Render('index')
+  @Render('index2')
   root() {
     return { message: 'Hello world!' };
   }

@@ -22,6 +22,11 @@ export class OrdersController {
     return this.ordersService.findOne(readOrderDto);
   }
 
+  @Post('dpstPrcsn')
+  dpstPrcsn(@Body() readOrderDto: ReadOrderDto): Promise<String> {
+    return this.ordersService.dpstPrcsn(readOrderDto);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.ordersService.remove(+id);
