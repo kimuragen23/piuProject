@@ -6,13 +6,14 @@ import { promises } from 'dns';
 import Order from './entities/order.entity';
 import { ReadOrderDto } from './dto/read-order.dto';
 import { OrderDetailDto } from './dto/orderdetail.dto';
+import { SuccessOrderDto } from './dto/success-order.dto';
 
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly ordersService: OrdersService) { }
 
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto): Promise<Order> {
+  create(@Body() createOrderDto: CreateOrderDto): Promise<SuccessOrderDto> {
     return this.ordersService.create(createOrderDto);
   }
 

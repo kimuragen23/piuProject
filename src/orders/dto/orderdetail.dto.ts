@@ -40,6 +40,9 @@ export class OrderDetailDto {
     @IsNumber()
     product_price: number;
 
+    @IsString()
+    expired_date: string;
+    
     @IsObject()
     @ValidateNested() @Type(() => AddressDto)
     address: AddressDto
