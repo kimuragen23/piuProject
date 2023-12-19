@@ -23,9 +23,9 @@ async function bootstrap() {
       transform: true,
     }),
   );
-  app.enable({
+  app.enableCors({
     origin: true,
-    credentials: true,
+    credentials: true
   })
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
