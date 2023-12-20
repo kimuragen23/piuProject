@@ -49,7 +49,7 @@ export class OrdersService {
       order.detailAddress = createOrderDto.address.detailAddress;
       order.agree = createOrderDto.agree;
       order.depositor_name = createOrderDto.depositor_name;
-      order.expired_date = this.createDate(new Date(),3);
+      order.expired_date = this.createDate(new Date(), 3);
       try {
         order.accountinfo = await this.accountinfoRepository.findOne({
           where: {
@@ -91,13 +91,13 @@ export class OrdersService {
         }
         console.log(orderdetail);
         this.orderdetailRepository.save(orderdetail).then(async () => {
-          
-          const order_date = this.createDate(new Date(),0)
+
+          const order_date = this.createDate(new Date(), 0)
 
           try {
             await this.mailerService.sendMail({
               from: 'juhee10131013@gmail.com',
-              to: [order.email,'juhee10131013@gmail.com'], //string or Array 노주희가 건드림 ><
+              to: [order.email, 'juhee10131013@gmail.com'], //string or Array 노주희가 건드림 ><
               subject: "주문이 성공적으로 완료되었습니다.",
               text: "",
               template: 'orders_mail.hbs',
@@ -150,7 +150,7 @@ export class OrdersService {
         .addSelect('ai.account_name', 'account_name')
         .addSelect('ai.account_number', 'account_number')
         .addSelect('ai.account_bank', 'account_bank')
-        .addSelect('o.create_date','create_date')
+        .addSelect('o.create_date', 'create_date')
         .leftJoin('tb_orderstatus', 'os', 'os.orderstatus_id = o.orderstatus_id')
         .leftJoin('tb_orderdetail', 'od', 'od.order_id = o.order_id')
         .leftJoin('tb_products', 'p', 'p.product_id = od.product_id')
@@ -178,8 +178,8 @@ export class OrdersService {
       address.detailAddress = result.detailAddress;
       orderdetail.address = address;
 
-      
-      orderdetail.expired_date = this.createDate(new Date(result.create_date),3)
+
+      orderdetail.expired_date = this.createDate(new Date(result.create_date), 3)
 
       return orderdetail;
     } catch (error) {
@@ -207,15 +207,11 @@ export class OrdersService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} order`;
-  }
+  createDate(date: Date, add_date: number) {
 
-  createDate(date:Date,add_date: number){
-    
     //현재 날짜에서 받은 날짜 더해서 날짜 설정.
-    date.setDate(date.getDate()+add_date) 
-    
+    date.setDate(date.getDate() + add_date)
+
     // 설정된 날짜로 적용됨
     const year = date.getFullYear();
     const month = date.getMonth() + 1;

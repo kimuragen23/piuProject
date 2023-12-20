@@ -9,28 +9,28 @@ import { ReadProductDto } from './dto/read-product.dto';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) { }
 
-  @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
-  }
+  // @Post()
+  // create(@Body() createProductDto: CreateProductDto) {
+  //   return this.productsService.create(createProductDto);
+  // }
 
-  @Get()
-  findAll(): Promise<Product[]> {
-    return this.productsService.findAll();
-  }
+  // @Get()
+  // findAll(): Promise<Product[]> {
+  //   return this.productsService.findAll();
+  // }
 
   @Get(':product_id')
   findAllByProductDetail(@Param('product_id') product_id: string): Promise<ReadProductDto> {
     return this.productsService.findAllByProductDetail(+product_id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-    return this.productsService.update(+id, updateProductDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
+  //   return this.productsService.update(+id, updateProductDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.productsService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.productsService.remove(+id);
+  // }
 }
