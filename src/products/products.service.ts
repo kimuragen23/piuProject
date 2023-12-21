@@ -107,7 +107,7 @@ export class ProductsService {
 
   async getSoldout(product_id: number): Promise<Object> {
     let soldout = await this.orderRepository.createQueryBuilder("o")
-      .select('p.inventory - sum(od.orderproduct_count)', 'inventory')
+      .select('sum(od.orderproduct_count)', 'inventory')
       .leftJoin('tb_orderdetail', 'od', 'o.order_id = od.order_id')
       .leftJoin('tb_products', 'p', 'p.product_id = od.product_id')
       .where('o.orderstatus_id = 1', {})
@@ -117,14 +117,20 @@ export class ProductsService {
       .andWhere('od.product_id = :product_id', { product_id })
       .getRawOne();
 
-    if (+soldout.inventory <= 0) {
+    let product = await this.productRepository.createQueryBuilder("p")
+      .select('p.inventory', 'inventory')
+      .where('p.product_id = :product_id', { product_id })
+      .getRawOne();
+
+    let inventory = +product.inventory - +soldout.inventory;
+    if (inventory <= 0) {
       return {
         "inventory": 0,
         "isSoldout": true
       };
     } else {
       return {
-        "inventory": +soldout.inventory,
+        "inventory": inventory,
         "isSoldout": false
       };
     }
@@ -133,7 +139,7 @@ export class ProductsService {
 
   /**
 select 
-  p.inventory - sum(od.orderproduct_count) as numberSales
+  sum(od.orderproduct_count) as numberSales
 from tb_order o
 left join tb_orderdetail od
 on o.order_id = od.order_id
