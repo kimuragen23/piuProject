@@ -16,6 +16,7 @@ import { ProductInfoDto } from './dto/productinfo.dto';
 import { MailerService } from '@nestjs-modules/mailer';
 import { SuccessOrderDto } from './dto/success-order.dto';
 
+
 @Injectable()
 export class OrdersService {
 
@@ -38,6 +39,7 @@ export class OrdersService {
       let order_code = createOrderCode.getRandomString();
       const product_info = createOrderDto.product_info;
       const order = new SuccessOrderDto();
+      const orderdetail = new Orderdetail();
 
       order.order_code = order_code;
       order.cust_name = createOrderDto.cust_name;
@@ -50,6 +52,7 @@ export class OrdersService {
       order.agree = createOrderDto.agree;
       order.depositor_name = createOrderDto.depositor_name;
       order.expired_date = this.createDate(new Date(), 3);
+      order.product_count = product_info.orderproduct_count;
       try {
         order.accountinfo = await this.accountinfoRepository.findOne({
           where: {
@@ -68,10 +71,11 @@ export class OrdersService {
       } catch (error) {
         throw error
       }
-      this.orderRepository.save(order).then(async () => {
+      await this.orderRepository.save(order)
 
-        const orderdetail = new Orderdetail();
+        
         orderdetail.orderproduct_count = product_info.orderproduct_count;
+      
         try {
           orderdetail.order = await this.orderRepository.createQueryBuilder('o')
             .select()
@@ -86,18 +90,19 @@ export class OrdersService {
               product_id: product_info.product_id
             }
           });
+          
         } catch (error) {
           throw error
         }
         console.log(orderdetail);
-        this.orderdetailRepository.save(orderdetail).then(async () => {
+        await this.orderdetailRepository.save(orderdetail)
 
           const order_date = this.createDate(new Date(), 0)
 
           try {
             await this.mailerService.sendMail({
-              from: 'juhee10131013@gmail.com',
-              to: [order.email, 'juhee10131013@gmail.com'], //string or Array 노주희가 건드림 ><
+              from: process.env.EMAIL,
+              to: [order.email,  process.env.EMAIL], //string or Array 노주희가 건드림 ><
               subject: "주문이 성공적으로 완료되었습니다.",
               text: "",
               template: 'orders_mail.hbs',
@@ -117,8 +122,11 @@ export class OrdersService {
           } catch (error) {
             console.error('메일 전송 중 오류가 발생했습니다:', error);
           }
-        });
-      });
+        
+
+      order.product_name = orderdetail.product.product_name;
+      order.product_price = orderdetail.product.price * order.product_count;
+      console.log(order);
       return order;
     } catch (error) {
       throw error;
@@ -151,6 +159,7 @@ export class OrdersService {
         .addSelect('ai.account_number', 'account_number')
         .addSelect('ai.account_bank', 'account_bank')
         .addSelect('o.create_date', 'create_date')
+        .addSelect('o.order_code','order_code')
         .leftJoin('tb_orderstatus', 'os', 'os.orderstatus_id = o.orderstatus_id')
         .leftJoin('tb_orderdetail', 'od', 'od.order_id = o.order_id')
         .leftJoin('tb_products', 'p', 'p.product_id = od.product_id')
@@ -160,6 +169,7 @@ export class OrdersService {
         .andWhere('o.cust_pwd = :cust_pwd', { cust_pwd })
         .getRawOne();
 
+      orderdetail.order_code= result.order_code;
       orderdetail.cust_name = result.cust_name;
       orderdetail.email = result.email;
       orderdetail.phone_number = result.phone_number;
@@ -178,7 +188,7 @@ export class OrdersService {
       address.detailAddress = result.detailAddress;
       orderdetail.address = address;
 
-
+      orderdetail.create_date = this.createDate(new Date(result.create_date), 0);
       orderdetail.expired_date = this.createDate(new Date(result.create_date), 3)
 
       return orderdetail;

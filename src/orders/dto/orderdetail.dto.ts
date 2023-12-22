@@ -5,6 +5,9 @@ import { AddressDto } from "./address.dto";
 export class OrderDetailDto {
 
     @IsString()
+    order_code: string;
+
+    @IsString()
     cust_name: string;
 
     @IsString()
@@ -39,6 +42,9 @@ export class OrderDetailDto {
 
     @IsNumber()
     product_price: number;
+
+    @IsString()
+    create_date: string;
 
     @IsString()
     expired_date: string;
