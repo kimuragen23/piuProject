@@ -48,6 +48,7 @@ export class OrdersService {
       order.cust_pwd = createOrderDto.cust_pwd;
       order.zipCode = createOrderDto.address.zipCode;
       order.fullAddress = createOrderDto.address.fullAddress;
+      order.extraAddress = createOrderDto.address.extraAddress;
       order.detailAddress = createOrderDto.address.detailAddress;
       order.agree = createOrderDto.agree;
       order.depositor_name = createOrderDto.depositor_name;
@@ -73,56 +74,56 @@ export class OrdersService {
       }
       await this.orderRepository.save(order)
 
-        
-        orderdetail.orderproduct_count = product_info.orderproduct_count;
-      
-        try {
-          orderdetail.order = await this.orderRepository.createQueryBuilder('o')
-            .select()
-            .where('o.order_code = :order_code', { order_code })
-            .getOne();
-        } catch (error) {
-          throw error
-        }
-        try {
-          orderdetail.product = await this.productRepository.findOne({
-            where: {
-              product_id: product_info.product_id
-            }
-          });
-          
-        } catch (error) {
-          throw error
-        }
-        console.log(orderdetail);
-        await this.orderdetailRepository.save(orderdetail)
 
-          const order_date = this.createDate(new Date(), 0)
+      orderdetail.orderproduct_count = product_info.orderproduct_count;
 
-          try {
-            await this.mailerService.sendMail({
-              from: process.env.EMAIL,
-              to: [order.email,  process.env.EMAIL], //string or Array 노주희가 건드림 ><
-              subject: "주문이 성공적으로 완료되었습니다.",
-              text: "",
-              template: 'orders_mail.hbs',
-              context: {  // Data to be sent to template files.
-                order_code: order.order_code,
-                order_date: order_date,
-                cust_name: order.cust_name,
-                phone: order.phone_number,
-                email: order.email,
-                address: `(${order.zipCode})${order.fullAddress} ${order.detailAddress}`,
-                depositorName: order.depositor_name,
-                price: orderdetail.product.price * product_info.orderproduct_count,
-                accountinfo: `${order.accountinfo.account_bank}(${order.accountinfo.account_number}) / ${order.accountinfo.account_name}`
-              }
-            });
-            console.log('메일이 전송되었습니다')
-          } catch (error) {
-            console.error('메일 전송 중 오류가 발생했습니다:', error);
+      try {
+        orderdetail.order = await this.orderRepository.createQueryBuilder('o')
+          .select()
+          .where('o.order_code = :order_code', { order_code })
+          .getOne();
+      } catch (error) {
+        throw error
+      }
+      try {
+        orderdetail.product = await this.productRepository.findOne({
+          where: {
+            product_id: product_info.product_id
           }
-        
+        });
+
+      } catch (error) {
+        throw error
+      }
+      console.log(orderdetail);
+      await this.orderdetailRepository.save(orderdetail)
+
+      const order_date = this.createDate(new Date(), 0)
+
+      try {
+        await this.mailerService.sendMail({
+          from: process.env.EMAIL,
+          to: [order.email, process.env.EMAIL], //string or Array 노주희가 건드림 ><
+          subject: "주문이 성공적으로 완료되었습니다.",
+          text: "",
+          template: 'orders_mail.hbs',
+          context: {  // Data to be sent to template files.
+            order_code: order.order_code,
+            order_date: order_date,
+            cust_name: order.cust_name,
+            phone: order.phone_number,
+            email: order.email,
+            address: `(${order.zipCode})${order.fullAddress} ${order.detailAddress}`,
+            depositorName: order.depositor_name,
+            price: orderdetail.product.price * product_info.orderproduct_count,
+            accountinfo: `${order.accountinfo.account_bank}(${order.accountinfo.account_number}) / ${order.accountinfo.account_name}`
+          }
+        });
+        console.log('메일이 전송되었습니다')
+      } catch (error) {
+        console.error('메일 전송 중 오류가 발생했습니다:', error);
+      }
+
 
       order.product_name = orderdetail.product.product_name;
       order.product_price = orderdetail.product.price * order.product_count;
@@ -150,6 +151,7 @@ export class OrdersService {
         .addSelect('o.zipCode', 'zipCode')
         .addSelect('o.fullAddress', 'fullAddress')
         .addSelect('o.detailAddress', 'detailAddress')
+        .addSelect('o.extraAddress', 'extraAddress')
         .addSelect('o.depositor_name', 'depositor_name')
         .addSelect('os.name', 'orderstatus')
         .addSelect('od.orderproduct_count', 'product_count')
@@ -159,7 +161,7 @@ export class OrdersService {
         .addSelect('ai.account_number', 'account_number')
         .addSelect('ai.account_bank', 'account_bank')
         .addSelect('o.create_date', 'create_date')
-        .addSelect('o.order_code','order_code')
+        .addSelect('o.order_code', 'order_code')
         .leftJoin('tb_orderstatus', 'os', 'os.orderstatus_id = o.orderstatus_id')
         .leftJoin('tb_orderdetail', 'od', 'od.order_id = o.order_id')
         .leftJoin('tb_products', 'p', 'p.product_id = od.product_id')
@@ -169,7 +171,7 @@ export class OrdersService {
         .andWhere('o.cust_pwd = :cust_pwd', { cust_pwd })
         .getRawOne();
 
-      orderdetail.order_code= result.order_code;
+      orderdetail.order_code = result.order_code;
       orderdetail.cust_name = result.cust_name;
       orderdetail.email = result.email;
       orderdetail.phone_number = result.phone_number;
@@ -186,6 +188,7 @@ export class OrdersService {
       address.zipCode = result.zipCode;
       address.fullAddress = result.fullAddress;
       address.detailAddress = result.detailAddress;
+      address.extraAddress = result.extraAddress;
       orderdetail.address = address;
 
       orderdetail.create_date = this.createDate(new Date(result.create_date), 0);

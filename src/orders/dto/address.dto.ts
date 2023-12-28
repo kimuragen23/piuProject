@@ -8,5 +8,8 @@ export class AddressDto {
     fullAddress: string;
 
     @IsString()
+    extraAddress: string;
+
+    @IsString()
     detailAddress: string;
 }

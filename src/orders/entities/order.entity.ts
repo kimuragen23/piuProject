@@ -33,6 +33,9 @@ export default class Order extends BaseEntity {
     @Column({ type: 'varchar', length: 20, comment: '상세주소' })
     detailAddress: string;
 
+    @Column({ type: 'varchar', length: 20, comment: '추가주소' })
+    extraAddress: string;
+
     @Column({ type: 'tinyint', comment: '수집동의' })
     agree: boolean;
 
