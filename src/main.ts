@@ -5,6 +5,7 @@ import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import * as hbs from 'hbs';
 import * as fs from 'fs';
+import { NotFoundExceptionFilter } from './NotFoundExceptionFilter';
 
 async function bootstrap() {
 
@@ -27,11 +28,14 @@ async function bootstrap() {
     origin: true,
     credentials: true
   })
+
+  app.useGlobalFilters(new NotFoundExceptionFilter());
+
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));
   app.setViewEngine('hbs');
   hbs.registerPartials(join(__dirname, '..', '/views/partials'));
-  await app.listen(80);
+  await app.listen(3000);
   //http://118.67.128.6
 }
 bootstrap();
